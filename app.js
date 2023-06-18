@@ -82,7 +82,7 @@ app.post("/districts/", async (request, response) => {
       INSERT INTO
          district(district_name,state_id,cases,cured,active,deaths)
       VALUES
-          (${districtName},${stateId},${cases},${cured},${active},${deaths})
+          ('${districtName}',${stateId},${cases},${cured},${active},${deaths})
       `;
   const postresponse = await db.run(postQuery);
   response.send("District Successfully Added");
@@ -112,7 +112,7 @@ app.delete("/districts/:districtId/", async (request, response) => {
     WHERE
     district_id = ${districtId};
     `;
-  const dbresponsedeletedistrict = await db.get(deleteQuerydistrict);
+  const dbresponsedeletedistrict = await db.run(deleteQuerydistrict);
   response.send("District Removed");
 });
 
@@ -146,7 +146,7 @@ app.get("/states/:stateId/stats/", async (request, response) => {
     FROM
       district
     WHERE
-      state_id='${stateId}';`;
+      state_id=${stateId};`;
   const stats = await db.get(getDirectorystatsQuery);
   console.log(stats);
   response.send({
@@ -174,7 +174,7 @@ state_name AS stateName
 FROM state
 WHERE state_id = ${getDistrictIdQueryResponse.state_id};`;
   const getStateNameQueryResponse = await database.get(getStateNameQuery);
-  response.send(getStateNameQueryResponse);
+  response.send(`stateName: '${getStateNameQueryResponse}'`);
 });
 
 module.exports = app;
